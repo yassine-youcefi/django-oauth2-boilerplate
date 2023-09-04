@@ -41,7 +41,7 @@ class User(AbstractUser):
     is_confirmed = models.BooleanField(('Is Confirmed'), default=False)
 
    
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     def __str__(self):
