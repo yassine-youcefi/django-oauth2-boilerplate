@@ -1,0 +1,69 @@
+version: "3"
+services:
+
+  web-oauth2:
+    container_name: web-oauth2
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    env_file: .env  
+    ports:
+      - "0.0.0.0:8000:8000"
+    command: bash -c  "python manage.py runserver 0.0.0.0:8000"
+
+    volumes:
+      - .:/code
+    stdin_open: true
+    tty: true
+    depends_on:
+      - redis-oauth2
+    networks:
+      - fmsb-network
+
+
+
+  redis-oauth2:
+    # update he memory overcommit setting
+    # 1/ sudo nano /etc/sysctl.conf
+    # 2/ vm.overcommit_memory = 1
+    # 3/ sudo sysctl -p
+    container_name: redis-oauth2
+    image: redis
+    user: redis
+    command: redis-server /code/redis.conf
+    restart: always
+    volumes:
+    - /code/redis.conf:/code/redis.conf
+    - redis-data:/data
+    - redis-logs:/var/log/redis
+    networks:
+      - fmsb-network
+
+  celery-oauth2:
+    container_name: celery-oauth2
+    build: .
+    env_file: .env
+    command: celery -A config worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis-oauth2
+    restart: always
+    networks:
+      - fmsb-network
+
+networks:
+  default:
+    driver: bridge
+  fmsb-network:
+    external: true
+
+volumes:
+  redis-data:
+  redis-logs:
+  
+
+
+    
