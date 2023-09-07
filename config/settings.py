@@ -153,7 +153,7 @@ DATABASES = {
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
-REDIS_URL = "redis://{host}:{port}/1".format(
+REDIS_URL = "redis://{host}:{port}/0".format(
     host=os.getenv("REDIS_HOST", "localhost"), port=os.getenv("REDIS_PORT", "6379")
 )
 
@@ -206,7 +206,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dubai'
 
 USE_I18N = True
 

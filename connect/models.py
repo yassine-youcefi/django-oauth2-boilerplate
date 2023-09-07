@@ -1,12 +1,32 @@
 from PIL import Image
 from django.db import models
-from django.db.models import JSONField
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 
 
+
+class Permission(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=100, unique=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Permission'
+        verbose_name_plural = 'Permissions'
+
+    def __str__(self):
+        return self.name
+
+
+class Role(models.Model):
+    name = models.CharField(max_length=255)
+    permissions = models.ManyToManyField(Permission, related_name='roles', blank=True)
+
+    def __str__(self):
+        return self.name
+     
+    
 class User(AbstractUser):
-    """
+    """ 
     Users within the Django authentication system are represented by this
     model.
 
@@ -18,7 +38,10 @@ class User(AbstractUser):
         ('Femelle', 'female'),
         ('Autre', 'other'),
     ]
-
+    
+    role = models.ForeignKey(Role, blank=True, null=True, related_name='users', on_delete=models.SET_NULL)
+    
+    permissions = models.ManyToManyField(Permission, related_name='users', blank=True, help_text='this field contain the user permissions')
     
     username = models.CharField(max_length=150, unique=True)
 
@@ -37,10 +60,19 @@ class User(AbstractUser):
         upload_to='profile_pictures/', blank=True, null=True)
 
     date_of_birth = models.DateField(blank=True, null=True, default=None)
+    
+    last_password_update = models.DateField(blank=True, null=True, default=None)
 
+    last_login_ip = models.CharField(max_length=255, blank=True, null=True)
+    
+    last_login_lat = models.CharField(max_length=255, blank=True, null=True)
+    
+    last_login_long = models.CharField(max_length=255, blank=True, null=True)
+    
+    social_login_id = models.CharField(max_length=255, blank=True, null=True)
+   
     is_confirmed = models.BooleanField(('Is Confirmed'), default=False)
 
-   
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
