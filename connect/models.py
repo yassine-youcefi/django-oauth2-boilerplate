@@ -4,14 +4,14 @@ from django.contrib.auth.models import AbstractUser
 
 
 
-class Permission(models.Model):
+class CustomPermission(models.Model):
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=100, unique=True)
     active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = 'Permission'
-        verbose_name_plural = 'Permissions'
+        verbose_name = 'Custom Permission'
+        verbose_name_plural = 'Custom Permission'
 
     def __str__(self):
         return self.name
@@ -19,7 +19,7 @@ class Permission(models.Model):
 
 class Role(models.Model):
     name = models.CharField(max_length=255)
-    permissions = models.ManyToManyField(Permission, related_name='roles', blank=True)
+    permissions = models.ManyToManyField(CustomPermission, related_name='roles', blank=True)
 
     def __str__(self):
         return self.name
@@ -41,7 +41,7 @@ class User(AbstractUser):
     
     role = models.ForeignKey(Role, blank=True, null=True, related_name='users', on_delete=models.SET_NULL)
     
-    permissions = models.ManyToManyField(Permission, related_name='users', blank=True, help_text='this field contain the user permissions')
+    custom_permissions = models.ManyToManyField(CustomPermission, related_name='users', blank=True, help_text='this field contain the user permissions')
     
     username = models.CharField(max_length=150, unique=True)
 
@@ -73,7 +73,7 @@ class User(AbstractUser):
    
     is_confirmed = models.BooleanField(('Is Confirmed'), default=False)
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     def __str__(self):

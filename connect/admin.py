@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
-from connect.models import User, Permission, Role
+from connect.models import User, CustomPermission, Role
 
 USER_FIELDS = (
     ("Personal infor", {
@@ -16,12 +16,12 @@ USER_FIELDS = (
 admin.site.unregister(Group)
 
 
-class PermissionAdmin(admin.ModelAdmin):
+class CustomPermissionAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'active')
     list_filter = ('active',)
     search_fields = ('name', 'url')
     ordering = ('name',)
-admin.site.register(Permission, PermissionAdmin)
+admin.site.register(CustomPermission, CustomPermissionAdmin)
 
 
 class RoleAdmin(admin.ModelAdmin):
@@ -39,7 +39,7 @@ class MyUserAdmin(UserAdmin):
             'fields': ('social_login_id',),
         }),
         ('Permissions', {
-            'fields': ('role', 'permissions','is_active', 'is_staff', 'is_superuser', 'is_confirmed'),
+            'fields': ('role', 'custom_permissions','is_active', 'is_staff', 'is_superuser', 'is_confirmed'),
         }),
         ('Last Login Details', {
             'fields': ('last_password_update', 'last_login_ip', 'last_login_lat', 'last_login_long'),

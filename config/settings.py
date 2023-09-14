@@ -85,6 +85,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
@@ -112,6 +113,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    
     'PAGE_SIZE': 10,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -123,13 +125,21 @@ REST_FRAMEWORK = {
 
 
 OAUTH2_PROVIDER = {
-# parses OAuth2 data from application/json requests
-'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-# this is the list of available scopes
-'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+    "SCOPES": {
+        "read": "Read scope",
+        "write": "Write scope",
+        "store": "Access to store",
+    },
+    # 'PKCE_REQUIRED': True,
+    "OAUTH2_BACKEND_CLASS": "oauth2_provider.oauth2_backends.JSONOAuthLibCore",
+    "ACCESS_TOKEN_EXPIRE_SECONDS": 36000,  # 10 Hours
 }
 
- 
+AUTHENTICATION_BACKENDS = (
+    "oauth2_provider.backends.OAuth2Backend",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
