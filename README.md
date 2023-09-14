@@ -135,6 +135,10 @@ Make sure you have the following software installed on your system:
 2. You can find our API documentation on Postman teams collection called ''
 
 
+### This is thr oauth application configuration 
+![alt text](oauth-app.png)
+
+
 ## Contributing
 
 ## License
