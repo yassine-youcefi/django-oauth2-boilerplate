@@ -91,3 +91,7 @@ class User(AbstractUser):
             self.phone_number = None
         return super().save(*args, **kwargs)
 
+    def has_permission(self, url_name):
+        if url_name in list(self.custom_permissions.values_list('url', flat=True)):
+            return True
+        return False

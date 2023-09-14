@@ -11,6 +11,5 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 class UserDetailView(APIView):
 
     def get(self, request):
-        print(request.user)
         serializer = GetConnectUserSerializer(request.user)
         return Response(serializer.data)

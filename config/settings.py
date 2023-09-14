@@ -88,6 +88,7 @@ MIDDLEWARE = [
     "oauth2_provider.middleware.OAuth2TokenMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "connect.middleware.UserAuthenticationMiddleware"
     
 ]
 
